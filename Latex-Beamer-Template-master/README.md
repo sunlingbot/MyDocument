@@ -10,7 +10,7 @@
 
 # Usage
 
-首先，你应当从[Github](https://github.com/YiZhiXiaoGuLI/Latex-Beamer-Template)上下载该模板，将整个代码库git clone到本地仓库中，将**beamercolorthemesustech.sty**文件复制到 **/texlive/2018/texmf-dist/** 目录中，接着打开 TeXlive Manager 客户端刷新宏包数据库，即可加载成功。
+首先，你应当从[Github](https://github.com/chungling/Latex-Beamer-Template/tree/master/Latex-Beamer-Template-master)上下载该模板，将整个代码库git clone到本地仓库中，将**beamercolorthemesustech.sty**文件复制到 **/texlive/2018/texmf-dist/** 目录中，接着打开 TeXlive Manager 客户端刷新宏包数据库，即可加载成功。
 
 # Demo
 
