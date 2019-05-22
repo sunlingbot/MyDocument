@@ -14,7 +14,7 @@
 
 # Demo
 
-敬请参阅演示文稿，[如何从0到1学习使用Git协作](https://github.com/max-studio/gitStudy/blob/master/slides/Slides_Songling.pdf)
+敬请参阅演示文稿: [如何从0到1学习使用Git协作](https://github.com/max-studio/gitStudy/blob/master/slides/Slides_Songling.pdf)
 
 
 # Contact 
