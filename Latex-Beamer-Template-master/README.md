@@ -8,9 +8,9 @@
 # Beamer Template
 * 这是一个学术性的LaTeX Beamer模板，你也可以随意使用和修改这个模板而不用经过我的同意，因为你本来就不需要。
 
-# Usage
+# Installed
 
-首先，你应当从[Github](https://github.com/chungling/Latex-Beamer-Template/tree/master/Latex-Beamer-Template-master)上下载该模板，将整个代码库git clone到本地仓库中，将**beamercolorthemesustech.sty**文件复制到 **F:\texlive\2018\texmf-dist\tex\latex** 目录中，接着打开 TeXlive Manager 客户端刷新宏包数据库，即可加载成功。
+将整个代码库git clone到本地仓库中，将**beamercolorthemesustech.sty**文件复制到 **F:\texlive\2018\texmf-dist\tex\latex** 目录中，接着打开 TeXlive Manager 客户端刷新宏包数据库，即可加载成功。
 
 # Demo
 
