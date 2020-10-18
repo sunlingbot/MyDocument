@@ -32,7 +32,7 @@ JavaSript 引擎也称 JavaScript 虚拟机，不同浏览器中的引擎的代�
 
 浏览器中的`Js`不能做的事情有：
 
-![HTTP](image/HTTP 20201017143626.png)
+![HTTP](images/HTTP 20201017143626.png)
 
 >- 网页中的`JavaScript`不能读、写、复制和执行硬盘上的任意文件，不能直接访问`OS`
 >- 受限制的文件相关的操作，例如，用 `<input>`标签选择文件
