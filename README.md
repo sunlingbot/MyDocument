@@ -3,3 +3,4 @@
 
 - JavaScript
 - Golang
+- lua
