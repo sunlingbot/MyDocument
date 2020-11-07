@@ -5,3 +5,4 @@
 - Golang
 - Lua
 - UI 设计
+- TiDB
