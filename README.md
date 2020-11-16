@@ -6,4 +6,4 @@
 - Lua
 - UI 设计
 - TiDB
-- LaTex Slide 模板
+- LaTex Slide 
