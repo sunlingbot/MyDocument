@@ -168,7 +168,7 @@ typeof (alert) // 返回 function ，因为 alert 是一个函数
 
 由于我在使用 Chrome 浏览器作为 JavaScript 的开发环境，下面展示的是一个**模态窗**，意味着用户不能与页面的其他部分进行交互，直到它们处理完模态窗口，即**用户按下确定的按钮**。
 
-![alert](img/alert20201018215510.png)
+![alert](Img/alert20201018215510.png)
 
 ## 2.8.3 prompt  交互函数
 
@@ -179,7 +179,7 @@ typeof (alert) // 返回 function ，因为 alert 是一个函数
 let age = prompt('How old are you?', 100) //显示文本 How old are you? ；输入框键入 100
 ```
 
-![prompt](img/prompt20201018221729.png)
+![prompt](Img/prompt20201018221729.png)
 
 ## 2.8.4 confirm
 
@@ -191,7 +191,7 @@ let isBoss = confirm("Are you the boss?")
 alert isBoss //确定返回 true ，点击取消返回 false
 ```
 
-![confirm](img/confirm20201018222207.png)
+![confirm](Img/confirm20201018222207.png)
 
 上述三个方法都有共同的限制：
 
