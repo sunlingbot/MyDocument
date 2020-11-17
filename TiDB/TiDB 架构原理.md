@@ -1,68 +1,68 @@
-# TiDB �ܹ�ԭ��
+# TiDB 架构原理
 
 ## 2.1 TiDB
-TiDB ��һ���ֲ�ʽ��ǿһ���ԡ��߱�ˮƽ��չ�����Ĺ�ϵ�����ݿ⡣
-- ˮƽ��չ
-- �߿�����
-- ACID ����
-- SQL ֧��
+TiDB 是一个分布式、强一致性、具备水平扩展能力的关系型数据库。
+- 水平扩展
+- 高可用性
+- ACID 事务
+- SQL 支持
 
 ![TiDB](../img/TiDB20201106152311.png)
 
-## 2.2 TiKV �洢����
-`TiKV` ��һ���ֲ�ʽ�Ĵ洢���棬ͬʱҲ��һ���ֲ�ܹ���
-- �ֲ�ʽ�� Key-Value �洢����
-- �߶ȷֲ㣬��ÿһ�㵥���Ż�
-- ͨ�� Raft Э�鱣֤����**һ����**
-- ֱ����������ϵͳ���������ڷֲ�ʽ�ļ�ϵͳ
+## 2.2 TiKV 存储引擎
+`TiKV` 是一个分布式的存储引擎，同时也是一个分层架构。
+- 分布式的 Key-Value 存储引擎
+- 高度分层，对每一层单独优化
+- 通过 Raft 协议保证数据**一致性**
+- 直接依赖本地系统，不依赖于分布式文件系统
 
 ![TiKV](../img/TiKV20201106152847.png)
 
-### 2.2.1 ��������
+### 2.2.1 数据容灾
 
-- ʹ�� **Raft** ���һ�����������ǿһ���Եĸ���
-    - ������д��
-    - ǿ Leader
-    - Leader ѡ��
-    - ��Ա���
-- �ڻ���/����/��������֮�䶼���� `Region` Ϊ��λ��������
+- 使用 **Raft** 解决一份数据如何做强一致性的副本
+    - 多数派写入
+    - 强 Leader
+    - Leader 选举
+    - 成员变更
+- 在机器/机架/数据中心之间都是以 `Region` 为单位复制数据
 
-### 2.2.2 ���ʵ�ֲַ�ʽ��
-��Ŀ�����ݽ�����Ƭ�󣬽���ͬ��Ƭ�ĸ��������ڲ�ͬ��λ���ϣ�ʵ�ּ�Ⱥ�ķֲ�ʽ��
-- `Hash` ��Ƭ
-- `Key` �� `Value` ���� `byte` ����
-- `Range` ��Ƭ�����߼� `Key` �ռ䣬��Ƭ��Ϊ `Region` ��λ������ `Map` 
+### 2.2.2 如何实现分布式？
+将目标数据进行切片后，将不同切片的副本调度在不同的位置上，实现集群的分布式。
+- `Hash` 分片
+- `Key` 和 `Value` 都是 `byte` 数组
+- `Range` 分片。从逻辑 `Key` 空间，分片成为 `Region` 单位的有序 `Map` 
 
 
  
-�������ݵĲ������࣬`Region` ͨ���Զ����ѳɸ�С�ķ�Ƭ�����Ѻ���ܽ��������ƶ���ˮƽ��չ����PD �Ǽ�Ⱥ�еĹ�����������ݹ���Ա�ĵ��Ȳ��Ժͼ�Ⱥ�е�ȫ����Ϣ�����������ƶ���
+随着数据的不断增多，`Region` 通过自动分裂成更小的分片，分裂后才能进行数据移动（水平扩展）。PD 是集群中的管理组件，根据管理员的调度策略和集群中的全局信息来调度数据移动。
  
   ![Region](../img/Region20201106155634.png)
 
-## 2.3 ����ģ��
-- ����ȥ���Ļ������׶��ύ
-    - ����ʱ�������
-- �ṩ�ֹ��� & ������������֧��
-- Ĭ�ϸ��뼶��Snapshot isolation (SI)
+## 2.3 事务模型
+- 基本去中心化的两阶段提交
+    - 单点时间戳分配
+- 提供乐观锁 & 悲观锁的特性支持
+- 默认隔离级别：Snapshot isolation (SI)
 
-### 2.3.1 TiKV ��������
+### 2.3.1 TiKV 事务引擎
 
-`TiKV Node` ��ʵ����ÿ��ʵ����洢 `Region` �ĸ�������ͬʵ���ϵĸ������� `Raft Group` ���໥֮��������ݵĸ��ƣ����� `Leader` д�����ݣ�`Leader` �ٸ��Ƹ� `Follower`����`PD` �����ż�Ⱥ��ȫ����Ϣ�������ⲿ�ͻ��˵Ĳ��ԶԼ�Ⱥ���е��ȡ�ͬʱ���ⲿ�Ŀͻ����ڵ�һ�ζ� `TiKV` ��Ⱥ���ʵ�ʱ����Ҫ�� `PD` �����Ӧ�� `Key` ��Ӧ�� `Region` ��·����Ϣ��֮���ٷ��ʻ��·����Ϣ���棬������Ҫ�� `PD` ����·����Ϣ��
+`TiKV Node` 是实例，每个实例会存储 `Region` 的副本，不同实例上的副本构成 `Raft Group` ，相互之间进行数据的复制（事务 `Leader` 写入数据，`Leader` 再复制给 `Follower`）。`PD` 掌握着集群的全局信息，根据外部客户端的策略对集群进行调度。同时，外部的客户端在第一次对 `TiKV` 集群访问的时候，需要跟 `PD` 请求对应的 `Key` 对应的 `Region` 的路由信息，之后再访问会把路由信息保存，不再需要向 `PD` 访问路由信息。
 
  ![TiKV_Driver](../img/TiKV_Driver0201106162001.png)
 
- ## 2.4 TiDB SQL ����
+ ## 2.4 TiDB SQL 引擎
 
- ### 2.4.1 SQL ����
- ��ν���ϵģ���еĸ���� `Table` �� `SQL` ��䣩ת��Ϊ `Key-Value`��
+ ### 2.4.1 SQL 引擎
+ 如何将关系模型中的概念（如 `Table` 和 `SQL` 语句）转化为 `Key-Value`。
  - OLTP + OLAP = HTAP
- - ���� SQL ����
+ - 完善 SQL 功能
 
-���ȣ��� `SQL` �ı�ת���ɳ����﷨�� `AST`����������У��ȹ�����Ȼ�󣬽� `AST` �߼��� `Logical Plan` ����ѧ���㣬ʹ�������������ϵȼۣ���ʽ��ȴ��ͬ���߼���֮������������ `Physical Plan`����������ƻ���������� `TiKV` ��ִ����Ӧ������
+首先，将 `SQL` 文本转化成抽象语法树 `AST`，进行语义校验等工作；然后，将 `AST` 逻辑化 `Logical Plan` 或数学运算，使得它们在语义上等价，形式上却不同；逻辑化之后会进行物理化 `Physical Plan`，最后将物理计划送入事务层 `TiKV` 中执行相应操作。
 
 ![TiDB](../img/TiDB20201106174022.png)
 
-��ͳ�� `SQL` ����ı����� `TiDB Server` ת���������� `Physical Plan`�������� `TiDB Server` ��ͨ�� `PD` ��ȡ������ݵĴ洢��·����Ϣ��
+传统的 `SQL` 语句文本经过 `TiDB Server` 转化成物理化 `Physical Plan`，紧接着 `TiDB Server` 会通过 `PD` 获取相关数据的存储的路由信息。
 
 ![TiDB](../img/TiDB20201106175059.png)
 
