@@ -14,4 +14,4 @@
   - [TiDB](TiDB/README.md)
   - BlockChain
 - 个人记录
-  - [Note](Note/README.md
+  - [Note](Note/README.md)
