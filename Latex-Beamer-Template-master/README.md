@@ -10,7 +10,7 @@
 
 # Installed
 
-将整个代码库git clone到本地仓库中，将**beamercolorthemesustech.sty**文件复制到 **F:\texlive\2018\texmf-dist\tex\latex** 目录中，接着打开 TeXlive Manager 客户端刷新宏包数据库，即可加载成功。
+将整个代码库git clone到本地仓库中，将**beamercolorthemesustech.sty**文件复制到 **F:\texlive\2018\texmf-dist\tex\latex** 目录中，接着打开 TeXlive Manager 客户端刷新宏包数据库，或者在输入 ` texhash` 刷新，即可加载成功。
 
 # Demo
 
