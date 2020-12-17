@@ -1,5 +1,5 @@
 # MyDocument
-本人学习笔记和学习计划整理
+本人学习笔记和学习计划整理.
 ## 目录
 - 程序设计
   - [Golang](Golang/README.md)
